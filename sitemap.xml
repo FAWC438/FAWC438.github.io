@@ -135,14 +135,14 @@
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/RPC/</loc>
+    <loc>https://alrisha.cn/tags/Micro/</loc>
     <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/Micro/</loc>
+    <loc>https://alrisha.cn/tags/RPC/</loc>
     <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -170,6 +170,13 @@
   </url>
   
   <url>
+    <loc>https://alrisha.cn/tags/Python/</loc>
+    <lastmod>2022-10-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://alrisha.cn/tags/Windows/</loc>
     <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -185,13 +192,6 @@
   
   <url>
     <loc>https://alrisha.cn/tags/Docker/</loc>
-    <lastmod>2022-10-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://alrisha.cn/tags/Python/</loc>
     <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
