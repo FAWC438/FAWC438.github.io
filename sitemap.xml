@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://alrisha.cn/2022/10/73c1232.html</loc>
+    
+    <lastmod>2022-10-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://alrisha.cn/2022/10/4182d7dd.html</loc>
     
     <lastmod>2022-10-19</lastmod>
@@ -126,7 +135,7 @@
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/Consul/</loc>
+    <loc>https://alrisha.cn/tags/RPC/</loc>
     <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -140,14 +149,21 @@
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/RPC/</loc>
+    <loc>https://alrisha.cn/tags/Consul/</loc>
     <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/Python/</loc>
+    <loc>https://alrisha.cn/tags/RFC-Document/</loc>
+    <lastmod>2022-10-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://alrisha.cn/tags/BGP/</loc>
     <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -175,7 +191,7 @@
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/BGP/</loc>
+    <loc>https://alrisha.cn/tags/Python/</loc>
     <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -192,6 +208,13 @@
   
   <url>
     <loc>https://alrisha.cn/categories/Project/</loc>
+    <lastmod>2022-10-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://alrisha.cn/categories/Literature/</loc>
     <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
