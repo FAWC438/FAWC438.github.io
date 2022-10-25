@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://alrisha.cn/2022/10/52023eef.html</loc>
+    
+    <lastmod>2022-10-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://alrisha.cn/2022/10/73c1232.html</loc>
     
     <lastmod>2022-10-25</lastmod>
@@ -128,14 +137,14 @@
 
   
   <url>
-    <loc>https://alrisha.cn/tags/Golang/</loc>
+    <loc>https://alrisha.cn/tags/Python/</loc>
     <lastmod>2022-10-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/RPC/</loc>
+    <loc>https://alrisha.cn/tags/Golang/</loc>
     <lastmod>2022-10-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -149,21 +158,14 @@
   </url>
   
   <url>
+    <loc>https://alrisha.cn/tags/RPC/</loc>
+    <lastmod>2022-10-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://alrisha.cn/tags/Gin/</loc>
-    <lastmod>2022-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://alrisha.cn/tags/Python/</loc>
-    <lastmod>2022-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://alrisha.cn/tags/Algorithm/</loc>
     <lastmod>2022-10-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -211,17 +213,31 @@
     <priority>0.2</priority>
   </url>
   
-
-  
   <url>
-    <loc>https://alrisha.cn/categories/Project/</loc>
+    <loc>https://alrisha.cn/tags/Algorithm/</loc>
     <lastmod>2022-10-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
+    <loc>https://alrisha.cn/tags/WSL/</loc>
+    <lastmod>2022-10-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+  <url>
     <loc>https://alrisha.cn/categories/Note/</loc>
+    <lastmod>2022-10-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://alrisha.cn/categories/Project/</loc>
     <lastmod>2022-10-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
