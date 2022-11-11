@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://alrisha.cn/2022/11/5ebced8a.html</loc>
+    
+    <lastmod>2022-11-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://alrisha.cn/2022/11/661de524.html</loc>
     
     <lastmod>2022-11-04</lastmod>
@@ -139,7 +148,7 @@
 
   <url>
     <loc>https://alrisha.cn/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -147,91 +156,98 @@
   
   <url>
     <loc>https://alrisha.cn/tags/Golang/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/Micro/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/RPC/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/RFC-Document/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/BGP/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/Consul/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/Windows/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/WSL/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/Gin/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/Python/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/Algorithm/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/Frrouting/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/tags/Docker/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://alrisha.cn/tags/SSH/</loc>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -240,21 +256,21 @@
   
   <url>
     <loc>https://alrisha.cn/categories/Project/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/categories/Literature/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://alrisha.cn/categories/Note/</loc>
-    <lastmod>2022-11-04</lastmod>
+    <lastmod>2022-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
