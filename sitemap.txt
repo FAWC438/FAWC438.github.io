@@ -1,3 +1,4 @@
+https://alrisha.cn/2022/11/10ee727c.html
 https://alrisha.cn/2022/11/5ebced8a.html
 https://alrisha.cn/2022/11/661de524.html
 https://alrisha.cn/2022/10/73c1232.html
@@ -29,6 +30,8 @@ https://alrisha.cn/tags/Algorithm/
 https://alrisha.cn/tags/Frrouting/
 https://alrisha.cn/tags/Docker/
 https://alrisha.cn/tags/SSH/
+https://alrisha.cn/tags/FastDFS/
+https://alrisha.cn/tags/Nginx/
 https://alrisha.cn/categories/Project/
 https://alrisha.cn/categories/Literature/
 https://alrisha.cn/categories/Note/
