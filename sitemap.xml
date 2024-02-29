@@ -365,6 +365,13 @@
   </url>
   
   <url>
+    <loc>https://alrisha.cn/tags/Python/</loc>
+    <lastmod>2024-02-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://alrisha.cn/tags/Open-Source/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -379,14 +386,14 @@
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/Python/</loc>
+    <loc>https://alrisha.cn/tags/Golang/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/Golang/</loc>
+    <loc>https://alrisha.cn/tags/Consul/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -414,6 +421,13 @@
   </url>
   
   <url>
+    <loc>https://alrisha.cn/tags/Pandas/</loc>
+    <lastmod>2024-02-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://alrisha.cn/tags/Docker/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -435,14 +449,14 @@
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/Consul/</loc>
+    <loc>https://alrisha.cn/tags/RFC-Document/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/Pandas/</loc>
+    <loc>https://alrisha.cn/tags/BGP/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -464,20 +478,6 @@
   
   <url>
     <loc>https://alrisha.cn/tags/Frrouting/</loc>
-    <lastmod>2024-02-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://alrisha.cn/tags/BGP/</loc>
-    <lastmod>2024-02-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://alrisha.cn/tags/RFC-Document/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -561,20 +561,6 @@
   </url>
   
   <url>
-    <loc>https://alrisha.cn/tags/Test/</loc>
-    <lastmod>2024-02-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://alrisha.cn/tags/Benchmarking/</loc>
-    <lastmod>2024-02-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://alrisha.cn/tags/FastDFS/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -583,6 +569,20 @@
   
   <url>
     <loc>https://alrisha.cn/tags/Nginx/</loc>
+    <lastmod>2024-02-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://alrisha.cn/tags/Test/</loc>
+    <lastmod>2024-02-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://alrisha.cn/tags/Benchmarking/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -696,14 +696,14 @@
   </url>
   
   <url>
-    <loc>https://alrisha.cn/categories/%E6%9D%82%E8%B0%88/</loc>
+    <loc>https://alrisha.cn/categories/%E9%A1%B9%E7%9B%AE/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://alrisha.cn/categories/%E9%A1%B9%E7%9B%AE/</loc>
+    <loc>https://alrisha.cn/categories/%E6%9D%82%E8%B0%88/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
