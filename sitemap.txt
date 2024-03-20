@@ -1,5 +1,5 @@
-https://alrisha.cn/2024/03/d1e89f6a.html
 https://alrisha.cn/2024/01/a5771958.html
+https://alrisha.cn/2024/03/d1e89f6a.html
 https://alrisha.cn/2024/02/81afead4.html
 https://alrisha.cn/2023/01/6d2cdefd.html
 https://alrisha.cn/about/index.html
@@ -85,9 +85,7 @@ https://alrisha.cn/tags/False-Sharing/
 https://alrisha.cn/tags/Cache/
 https://alrisha.cn/tags/CPU/
 https://alrisha.cn/tags/Memory/
-https://alrisha.cn/tags/Disk/
 https://alrisha.cn/tags/Network/
-https://alrisha.cn/tags/Server/
 https://alrisha.cn/categories/%E7%AC%94%E8%AE%B0/
 https://alrisha.cn/categories/%E9%A1%B9%E7%9B%AE/
 https://alrisha.cn/categories/%E6%9D%82%E8%B0%88/
