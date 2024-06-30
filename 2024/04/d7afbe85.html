@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>通过代码计算组合数：解决矩阵最大对角路径问题 | Alrisha</title><meta name="author" content="FAWC,kevin_lgh@foxmail.com"><meta name="copyright" content="FAWC"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="组合数 C(n, k)表示从 n 个元素中选择 k 个元素的组合数，其公式为： $$C(n, k) &#x3D; \frac{n!}{k!(n-k)!}\tag{1}$$ 其中”!”表示阶乘，即 $n! &#x3D; n * (n-1) * (n-2) * … * 1$。 然而，直接使用这个公式编写代码计算组合数可能会导致溢出，因为阶乘的值增长非常快。因此，我们通常使用更有效的方法来计算组合数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过代码计算组合数：解决矩阵最大对角路径问题">
+<meta property="og:url" content="https://alrisha.cn/2024/04/d7afbe85.html">
+<meta property="og:site_name" content="Alrisha">
+<meta property="og:description" content="组合数 C(n, k)表示从 n 个元素中选择 k 个元素的组合数，其公式为： $$C(n, k) &#x3D; \frac{n!}{k!(n-k)!}\tag{1}$$ 其中”!”表示阶乘，即 $n! &#x3D; n * (n-1) * (n-2) * … * 1$。 然而，直接使用这个公式编写代码计算组合数可能会导致溢出，因为阶乘的值增长非常快。因此，我们通常使用更有效的方法来计算组合数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/04/19/odXSFIv6qlmk5UM.jpg">
+<meta property="article:published_time" content="2024-04-19T12:17:02.000Z">
+<meta property="article:modified_time" content="2024-05-21T13:44:15.011Z">
+<meta property="article:author" content="FAWC">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Math">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2024/04/19/odXSFIv6qlmk5UM.jpg"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/gaming.svg"><link rel="canonical" href="https://alrisha.cn/2024/04/d7afbe85.html"><link rel="preconnect"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//www.clarity.ms"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="0XuTTRNwC5ys6TFutW1GLvmtffD7QVYk-6BAsY5RaOg"/><meta name="baidu-site-verification" content="code-Ktb2MMTpFe"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32241c273a93c8c23595f464d477ca45";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-RKQBB7LDQC"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-RKQBB7LDQC');
+</script><script>(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "dy67k2hgwc");</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '通过代码计算组合数：解决矩阵最大对角路径问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-05-21 21:44:15'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...（若加载时间过长请尝试刷新页面或更换访问节点🙏）</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2024/02/29/ZkKG1RDmgLTqaoE.png" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2024/04/19/odXSFIv6qlmk5UM.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Alrisha"><span class="site-name">Alrisha</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">通过代码计算组合数：解决矩阵最大对角路径问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-19T12:17:02.000Z" title="发表于 2024-04-19 20:17:02">2024-04-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-05-21T13:44:15.011Z" title="更新于 2024-05-21 21:44:15">2024-05-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="通过代码计算组合数：解决矩阵最大对角路径问题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>组合数 C(n, k)表示从 n 个元素中选择 k 个元素的组合数，其公式为：</p>
+<p>$$<br>C(n, k) &#x3D; \frac{n!}{k!(n-k)!}\tag{1}<br>$$</p>
+<p>其中”!”表示阶乘，即 $n! &#x3D; n * (n-1) * (n-2) * … * 1$。</p>
+<p>然而，直接使用这个公式编写代码计算组合数可能会导致溢出，因为阶乘的值增长非常快。因此，我们通常使用更有效的方法来计算组合数。</p>
+<h1 id="k-分数分解"><a href="#k-分数分解" class="headerlink" title="k 分数分解"></a>k 分数分解</h1><p>我们可以通过变换公式 (1) 得到一个新的适合程序运算的公式，计算过程如下：</p>
+<p>$$<br>C(n, k) &#x3D; \frac{n!}{k!(n-k)!} \<br>&#x3D; (\frac{1}{1} * \frac{1}{2} * \frac{1}{3} * … * \frac{1}{k}) * \frac{n!}{(n-k)!}<br>$$</p>
+<p>展开 $\frac{n!}{(n-k)!}$ 得到：</p>
+<p>$$<br>C(n, k) &#x3D; (\frac{1}{1} * \frac{1}{2} * \frac{1}{3} * … * \frac{1}{k}) * [(n-k+1) * (n-k+2) * … * n] \<br>&#x3D; \frac{(n-k+1)}{1} * \frac{(n-k+2)}{2} * … * \frac{n}{k}\tag{2}<br>$$</p>
+<p>也就是说，我们得到了一个等价的组合数公式 (2) ，通过这个公式，我们能很容易写出一段代码实现组合数的计算：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> <span class="title function_">combinationByK</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">res</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= k; i++) &#123;</span><br><span class="line">            res = res * (n - k + i) / i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数的时间复杂度是 O(k)，空间复杂度是 O(1)。</p>
+<h1 id="递推公式"><a href="#递推公式" class="headerlink" title="递推公式"></a>递推公式</h1><p>组合数的递推公式是：</p>
+<p>$$<br>C(n, k) &#x3D; C(n-1, k-1) + C(n-1, k)\tag{3}<br>$$</p>
+<p>这个公式的含义是，从 n 个元素中选择 k 个元素的组合数等于从 n-1 个元素中选择 k-1 个元素的组合数（即选择了特定的一个元素）和从 n-1 个元素中选择 k 个元素的组合数（即没有选择特定的那个元素）的和。</p>
+<p>我们很容易直观得想到通过递归的方法实现它：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> <span class="title function_">combinationByDP</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (k == <span class="number">0</span> || k == n) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> combination(n - <span class="number">1</span>, k - <span class="number">1</span>) + combination(n - <span class="number">1</span>, k);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然而，这个函数的时间复杂度是 O(2^k)，空间复杂度是 O(k)，效率非常低。因此，我们通常通过动态规划的方法实现这个组合数公式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> <span class="title function_">combinationByDP</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="type">long</span>[][] dp = <span class="keyword">new</span> <span class="title class_">long</span>[n + <span class="number">1</span>][k + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">1</span>; j &lt;= k; j++) &#123;</span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>] + dp[i - <span class="number">1</span>][j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n][k];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数的时间复杂度是 O(nk)，空间复杂度也是 O(nk)，因为我们需要计算并存储所有小于或等于 n 和 k 的组合数。</p>
+<p>相比<a href="#k-%E5%88%86%E6%95%B0%E5%88%86%E8%A7%A3">k 分数分解</a>的方法，这个程序的缺点是它需要更多的时间和空间。因为它需要计算并存储所有小于或等于 n 和 k 的组合数，而不仅仅是 C(n, k)。如果 n 和 k 都非常大，这可能会成为一个问题。然而，如果我们需要计算很多不同的组合数，这个程序可能会更快，因为它可以复用已经计算过的组合数。</p>
+<h1 id="应用：解决矩阵最大对角路径问题"><a href="#应用：解决矩阵最大对角路径问题" class="headerlink" title="应用：解决矩阵最大对角路径问题"></a>应用：解决矩阵最大对角路径问题</h1><p>给定一个 m * n 的矩阵，求从左上角到右下角的最大对角路径的和。对角路径是指从左上角到右下角的路径， <strong>每一步只能向右或向下移动</strong> 。</p>
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>这是一个经典组合数问题。我们可以这样抽象这个问题：假设我们有一个 m * n 的矩阵，我们要从左上角走到右下角，每次只能向右或向下移动。那么，从左上角到右下角的任何路径都必须包含 m - 1 步向下移动和 n - 1 步向右移动，总共 m + n - 2 步。</p>
+<p>问题就转化为了在 m + n - 2 步中选择 m - 1 步向下移动的方式有多少种，这就是一个组合问题。答案是 $C(m+n-2, m-1)$ 或 $C(m+n-2, n-1)$ ，其中 $C(a, b)$ 表示从 a 个元素中选择 b 个元素的组合数。</p>
+<h2 id="通过-k-分数分解计算组合数"><a href="#通过-k-分数分解计算组合数" class="headerlink" title="通过 k 分数分解计算组合数"></a>通过 k 分数分解计算组合数</h2><p>根据前文的式 (2) ，我们可以得到以下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 测试：3 * 7 的矩阵</span></span><br><span class="line">        System.out.println(uniquePaths(<span class="number">3</span>, <span class="number">7</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> <span class="title function_">uniquePaths</span><span class="params">(<span class="type">int</span> m, <span class="type">int</span> n)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> m + n - <span class="number">2</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">b</span> <span class="operator">=</span> Math.min(m - <span class="number">1</span>, n - <span class="number">1</span>);</span><br><span class="line">        <span class="type">long</span> <span class="variable">res</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= b; i++) &#123;</span><br><span class="line">            res = res * (a - b + i) / i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数的时间复杂度是 O(min(m, n))，空间复杂度是 O(1)。</p>
+<h2 id="通过动态规划计算组合数"><a href="#通过动态规划计算组合数" class="headerlink" title="通过动态规划计算组合数"></a>通过动态规划计算组合数</h2><p>我们也可以通过动态规划的方法计算组合数。</p>
+<p>我们可以定义一个二维数组 dp，其中 <code>dp[i][j]</code> 表示从左上角到位置 <code>(i, j)</code> 的路径数量。对于位置 <code>(i, j)</code> ，我们只能从位置 <code>(i-1, j)</code> 或位置 <code>(i, j-1)</code> 到达，所以 <code> dp[i][j] = dp[i-1][j] + dp[i][j-1]</code> ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 测试：3 * 7 的矩阵</span></span><br><span class="line">        System.out.println(uniquePaths(<span class="number">3</span>, <span class="number">7</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">uniquePaths</span><span class="params">(<span class="type">int</span> m, <span class="type">int</span> n)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[][] dp = <span class="keyword">new</span> <span class="title class_">int</span>[m][n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (i == <span class="number">0</span> || j == <span class="number">0</span>) &#123;</span><br><span class="line">                    dp[i][j] = <span class="number">1</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j] + dp[i][j - <span class="number">1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[m - <span class="number">1</span>][n - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数的时间复杂度是 O(mn)，空间复杂度也是 O(mn)。</p>
+<p>读者不难看出，这个问题的解法和上文提到的 <a href="#%E9%80%92%E6%8E%A8%E5%85%AC%E5%BC%8F">组合数递推公式</a> 中的动态规划解法本质上是一样的。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://alrisha.cn">FAWC</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://alrisha.cn/2024/04/d7afbe85.html">https://alrisha.cn/2024/04/d7afbe85.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://alrisha.cn" target="_blank">Alrisha</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a><a class="post-meta__tags" href="/tags/Math/">Math</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2024/04/19/odXSFIv6qlmk5UM.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/97feaabb.html" title="我的 2024 暑期实习面经"><img class="cover" src="https://s2.loli.net/2022/12/13/hN7FB1dGt3kPxjv.webp" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">我的 2024 暑期实习面经</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/bd9408a6.html" title="服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿"><img class="cover" src="https://s2.loli.net/2024/03/20/HK6peJdxu7tfIqL.png" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/10/44259116.html" title="如何单独编译 Nacos 客户端源码并将其注入 Spring Cloud 中"><img class="cover" src="https://s2.loli.net/2023/05/08/ytsYGgT21pbqdCa.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2024-02-24</div><div class="title">如何单独编译 Nacos 客户端源码并将其注入 Spring Cloud 中</div></div></a></div><div><a href="/2024/03/d1e89f6a.html" title="服务器突然变得卡顿，怎么办？（1）综述"><img class="cover" src="https://s2.loli.net/2024/03/20/HK6peJdxu7tfIqL.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2024-05-21</div><div class="title">服务器突然变得卡顿，怎么办？（1）综述</div></div></a></div><div><a href="/2024/04/bd9408a6.html" title="服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿"><img class="cover" src="https://s2.loli.net/2024/03/20/HK6peJdxu7tfIqL.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2024-05-21</div><div class="title">服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿</div></div></a></div><div><a href="/2024/02/81afead4.html" title="花式实现三个线程交替打印ABC"><img class="cover" src="https://s2.loli.net/2024/02/26/MjBFKAicaJS1RrX.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2024-05-21</div><div class="title">花式实现三个线程交替打印ABC</div></div></a></div><div><a href="/2024/01/a5771958.html" title="解决伪共享(False-Sharing)问题：最大化利用你的CPU缓存"><img class="cover" src="https://s2.loli.net/2024/01/24/9TnNwmXv82Z6saM.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2024-05-21</div><div class="title">解决伪共享(False-Sharing)问题：最大化利用你的CPU缓存</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2024/02/29/ZkKG1RDmgLTqaoE.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">FAWC</div><div class="author-info__description">计算机专业学习者兼游戏狂热爱好者</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FAWC438"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FAWC438" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:kevin_lgh@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">本网站的图床 CDN 在国内部分地区访问可能会有点慢，若加载时间过长请尝试刷新页面或更换访问节点🙏</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#k-%E5%88%86%E6%95%B0%E5%88%86%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">k 分数分解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%92%E6%8E%A8%E5%85%AC%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">递推公式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%EF%BC%9A%E8%A7%A3%E5%86%B3%E7%9F%A9%E9%98%B5%E6%9C%80%E5%A4%A7%E5%AF%B9%E8%A7%92%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">应用：解决矩阵最大对角路径问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">3.1.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-k-%E5%88%86%E6%95%B0%E5%88%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E7%BB%84%E5%90%88%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">通过 k 分数分解计算组合数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E8%AE%A1%E7%AE%97%E7%BB%84%E5%90%88%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">通过动态规划计算组合数</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/06/12213648.html" title="简述 OAuth 2.0 鉴权架构"><img src="https://s2.loli.net/2024/06/30/eIw8yrLZh1mdPAQ.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="简述 OAuth 2.0 鉴权架构"/></a><div class="content"><a class="title" href="/2024/06/12213648.html" title="简述 OAuth 2.0 鉴权架构">简述 OAuth 2.0 鉴权架构</a><time datetime="2024-06-30T11:35:06.000Z" title="发表于 2024-06-30 19:35:06">2024-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/9d022207.html" title="如何通过 SSH 远程连接另一台 Windows 主机中的 WSL"><img src="https://s2.loli.net/2022/11/11/eW4Utvf5dPFmqsX.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="如何通过 SSH 远程连接另一台 Windows 主机中的 WSL"/></a><div class="content"><a class="title" href="/2024/05/9d022207.html" title="如何通过 SSH 远程连接另一台 Windows 主机中的 WSL">如何通过 SSH 远程连接另一台 Windows 主机中的 WSL</a><time datetime="2024-05-06T08:51:09.000Z" title="发表于 2024-05-06 16:51:09">2024-05-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/97feaabb.html" title="我的 2024 暑期实习面经"><img src="https://s2.loli.net/2022/12/13/hN7FB1dGt3kPxjv.webp" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="我的 2024 暑期实习面经"/></a><div class="content"><a class="title" href="/2024/05/97feaabb.html" title="我的 2024 暑期实习面经">我的 2024 暑期实习面经</a><time datetime="2024-05-01T14:04:58.000Z" title="发表于 2024-05-01 22:04:58">2024-05-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/d7afbe85.html" title="通过代码计算组合数：解决矩阵最大对角路径问题"><img src="https://s2.loli.net/2024/04/19/odXSFIv6qlmk5UM.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="通过代码计算组合数：解决矩阵最大对角路径问题"/></a><div class="content"><a class="title" href="/2024/04/d7afbe85.html" title="通过代码计算组合数：解决矩阵最大对角路径问题">通过代码计算组合数：解决矩阵最大对角路径问题</a><time datetime="2024-04-19T12:17:02.000Z" title="发表于 2024-04-19 20:17:02">2024-04-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/bd9408a6.html" title="服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿"><img src="https://s2.loli.net/2024/03/20/HK6peJdxu7tfIqL.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿"/></a><div class="content"><a class="title" href="/2024/04/bd9408a6.html" title="服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿">服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿</a><time datetime="2024-04-06T08:08:22.000Z" title="发表于 2024-04-06 16:08:22">2024-04-06</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://s2.loli.net/2024/04/19/odXSFIv6qlmk5UM.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2024 By FAWC</div><div class="footer_custom_text">感谢你看到最后！</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><script src="/pluginsSrc/instant.page/instantpage.js" type="module"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = '/pluginsSrc/mathjax/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div>
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: true,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body></html>
