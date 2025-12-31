@@ -1,0 +1,283 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>深入解析 HashMap 的哈希算法 | Alrisha</title><meta name="author" content="FAWC,kevin_lgh@foxmail.com"><meta name="copyright" content="FAWC"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="HashMap 是 Java 中常用的一种数据结构，它实现了 Map 接口，用于存储键值对。HashMap 的底层实现原理是数组和链表&#x2F;红黑树，通过哈希函数将键映射到数组中的某个位置，如果位置上已经有元素，则使用链表进行存储。 HashMap 的扩容机制是 HashMap 中的重要的算法，它通过调整 HashMap 的容量来控制 HashMap 的大小，以减少空间浪费和提高查询效率。一般">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入解析 HashMap 的哈希算法">
+<meta property="og:url" content="https://alrisha.cn/2024/07/a2b435f4.html">
+<meta property="og:site_name" content="Alrisha">
+<meta property="og:description" content="HashMap 是 Java 中常用的一种数据结构，它实现了 Map 接口，用于存储键值对。HashMap 的底层实现原理是数组和链表&#x2F;红黑树，通过哈希函数将键映射到数组中的某个位置，如果位置上已经有元素，则使用链表进行存储。 HashMap 的扩容机制是 HashMap 中的重要的算法，它通过调整 HashMap 的容量来控制 HashMap 的大小，以减少空间浪费和提高查询效率。一般">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/02/26/MjBFKAicaJS1RrX.png">
+<meta property="article:published_time" content="2024-07-20T15:14:08.000Z">
+<meta property="article:modified_time" content="2025-12-31T21:44:40.782Z">
+<meta property="article:author" content="FAWC">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="HashMap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2024/02/26/MjBFKAicaJS1RrX.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/gaming.svg"><link rel="canonical" href="https://alrisha.cn/2024/07/a2b435f4.html"><link rel="preconnect" href="//cdnjs.cloudflare.com"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//www.clarity.ms"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="0XuTTRNwC5ys6TFutW1GLvmtffD7QVYk-6BAsY5RaOg"/><meta name="baidu-site-verification" content="code-Ktb2MMTpFe"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32241c273a93c8c23595f464d477ca45";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-RKQBB7LDQC"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-RKQBB7LDQC');
+</script><script>(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "dy67k2hgwc");</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdnjs.cloudflare.com/ajax/libs/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '深入解析 HashMap 的哈希算法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-01-01 05:44:40'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...（若加载时间过长请尝试刷新页面或更换访问节点🙏）</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2024/02/29/ZkKG1RDmgLTqaoE.png" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">61</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2024/02/26/MjBFKAicaJS1RrX.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Alrisha"><span class="site-name">Alrisha</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">深入解析 HashMap 的哈希算法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-20T15:14:08.000Z" title="发表于 2024-07-20 23:14:08">2024-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T21:44:40.782Z" title="更新于 2026-01-01 05:44:40">2026-01-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="深入解析 HashMap 的哈希算法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>HashMap 是 Java 中常用的一种数据结构，它实现了 Map 接口，用于存储键值对。HashMap 的底层实现原理是数组和链表&#x2F;红黑树，通过哈希函数将键映射到数组中的某个位置，如果位置上已经有元素，则使用链表进行存储。</p>
+<p>HashMap 的扩容机制是 HashMap 中的重要的算法，它通过调整 HashMap 的容量来控制 HashMap 的大小，以减少空间浪费和提高查询效率。一般来说，每次扩容，HashMap 存储链表&#x2F;红黑树的数组的长度都会变为 2 倍。在 HashMap 实现中，这个数组是一个成员变量 <code>table</code>。</p>
+<p>为什么要这么设计？我们首先要知道一个好的 Hash 函数至少应该满足什么条件：</p>
+<ol>
+<li><strong>均匀分布</strong> ：经过哈希函数的计算，每个元素应该尽可能均匀地分布到数组中。具体地说，要保证每个 <code>table</code> 下标都有可能命中</li>
+<li><strong>快速计算</strong> ：哈希函数的计算应该尽可能高效</li>
+<li><strong>离散分布</strong> ：哈希函数的计算结果应该尽可能的离散，减少碰撞。具体地说，要保证每个 <code>table</code> 下标中的元素数量都差不多</li>
+</ol>
+<p>带着这些条件，我们看看 Java 的 HashMap 具体是怎么实现的。 <em>以下源码来自 JDK 21。</em></p>
+<h1 id="深入源码看看-HashMap-的-put-方法"><a href="#深入源码看看-HashMap-的-put-方法" class="headerlink" title="深入源码看看 HashMap 的 put 方法"></a>深入源码看看 HashMap 的 put 方法</h1><p>我们知道，只有往 HashMap 中添加元素，才会触发扩容机制。因此我们需要从 <code>put</code> 方法出发，看看它具体做了什么。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Associates the specified value with the specified key in this map.</span></span><br><span class="line"><span class="comment"> * If the map previously contained a mapping for the key, the old</span></span><br><span class="line"><span class="comment"> * value is replaced.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key key with which the specified value is to be associated</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> value value to be associated with the specified key</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> the previous value associated with &#123;<span class="doctag">@code</span> key&#125;, or</span></span><br><span class="line"><span class="comment"> *         &#123;<span class="doctag">@code</span> null&#125; if there was no mapping for &#123;<span class="doctag">@code</span> key&#125;.</span></span><br><span class="line"><span class="comment"> *         (A &#123;<span class="doctag">@code</span> null&#125; return can also indicate that the map</span></span><br><span class="line"><span class="comment"> *         previously associated &#123;<span class="doctag">@code</span> null&#125; with &#123;<span class="doctag">@code</span> key&#125;.)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> V <span class="title function_">put</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> putVal(hash(key), key, value, <span class="literal">false</span>, <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看来 <code>put</code> 和 <code>putIfAbsent</code> 等方法底层都是调用了 <code>putVal</code> 这个方法，那我们先跳过 <code>hash()</code> 这个方法，继续往下看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Implements Map.put and related methods.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> hash hash for key</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key the key</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> value the value to put</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> onlyIfAbsent if true, don&#x27;t change existing value</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> evict if false, the table is in creation mode.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> previous value, or null if none</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">final</span> V <span class="title function_">putVal</span><span class="params">(<span class="type">int</span> hash, K key, V value, <span class="type">boolean</span> onlyIfAbsent,</span></span><br><span class="line"><span class="params">               <span class="type">boolean</span> evict)</span> &#123;</span><br><span class="line">    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; <span class="type">int</span> n, i;</span><br><span class="line">    <span class="comment">// 如果 table 为空，或者 table 的长度为 0，那么就需要进行初始化</span></span><br><span class="line">    <span class="keyword">if</span> ((tab = table) == <span class="literal">null</span> || (n = tab.length) == <span class="number">0</span>)</span><br><span class="line">        n = (tab = resize()).length;</span><br><span class="line">    <span class="comment">// 如果当前 table 中 i 位置为空，直接插入</span></span><br><span class="line">    <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="literal">null</span>)</span><br><span class="line">        tab[i] = newNode(hash, key, value, <span class="literal">null</span>);</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意这段代码 <code>i = (n - 1) &amp; hash</code> ，这里是计算元素在 <code>table</code> 数组中的位置，<code>n</code> 是 <code>table</code> 数组的长度。</p>
+<h1 id="为什么是-2-的幂次方？"><a href="#为什么是-2-的幂次方？" class="headerlink" title="为什么是 2 的幂次方？"></a>为什么是 2 的幂次方？</h1><p>我们知道，<code>table</code> 数组的长度是 2 的幂次方。这里的 <code>(n - 1) &amp; hash</code> 是为了保证计算出来的位置在数组的范围内，也就是说，<code>i = (n - 1) &amp; hash</code> <strong>等价于</strong> <code>i = hash % n</code> 。</p>
+<p>前面我们说过， <strong>均匀分布</strong> 是一个好的哈希函数的特点。这就要求我们每次通过 hash 计算出来的下标要尽可能的覆盖到整个数组，不能超出数组的范围。那么最直观的方式就是直接取模 <code>i = hash % n</code>。但是在计算机中，取模运算是比较耗时的，这不符合 <strong>快速计算</strong> 这一 hash 函数要求；而相对应的，位移运算可以说是效率最高的运算方式之一了。</p>
+<p>如果我们以 <code>table</code> 数组的长度 <code>n</code> 是 2 的幂次方为前提，那么 <code>(n - 1) &amp; hash</code> 就相当于 <code>hash % n</code>，我举个例子：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">// hash 指是 int 类型，因此有 32 位，我们假设下方是我们待计算的 hash 值</span><br><span class="line">h = 0b 1101 1010 1011 1100 1011 1101 1010 1011</span><br><span class="line"></span><br><span class="line">// 假设 table 的长度是 16，即 n = 16，那么</span><br><span class="line">n = 0b 0000 0000 0000 0000 0000 0000 0001 0000</span><br><span class="line"></span><br><span class="line">// 如果直接计算 hash % n，那么其余数显然只和后 4 位有关，即</span><br><span class="line">i = h % n = 0b 0000 0000 0000 0000 0000 0000 0000 1011</span><br><span class="line"></span><br><span class="line">// 我们再来看看 n - 1 的二进制表示，它将后面的数位全部置为 1，即</span><br><span class="line">n - 1 = 15 = 0b 0000 0000 0000 0000 0000 0000 0000 1111</span><br><span class="line"></span><br><span class="line">// 这就能很容易看出，(n - 1) &amp; hash 就相当于 hash % n，即</span><br><span class="line">h = 0b 1101 1010 1011 1100 1011 1101 1010 1011</span><br><span class="line">&amp;</span><br><span class="line">n - 1 = 0b 0000 0000 0000 0000 0000 0000 0000 1111</span><br><span class="line">=</span><br><span class="line">i = 0b 0000 0000 0000 0000 0000 0000 0000 1011</span><br></pre></td></tr></table></figure>
+
+<p>因此，我们可以说 <code>(n - 1) &amp; hash</code> 这段计算 hash 落点的代码，同时实现了 HashMap 中 hash 函数的 <strong>快速计算</strong> 和 <strong>均匀分布</strong> 的两种能力。</p>
+<h1 id="保证-hash-映射的离散分布"><a href="#保证-hash-映射的离散分布" class="headerlink" title="保证 hash 映射的离散分布"></a>保证 hash 映射的离散分布</h1><p>上一节我们谈到，通过 <code>(n - 1) &amp; hash</code> ，我们高效地获取了 hash 映射的落点。但是，这只是保证了 hash 映射的 <strong>均匀分布</strong> （每个 <code>table</code> 下标都有可能命中），而没有保证 hash 映射的 <strong>离散分布</strong> （每个 <code>table</code> 下标命中的元素数量都差不多）。那么 HashMap 又是怎么做才保证了 hash 映射的 <strong>离散分布</strong> 的呢？</p>
+<p>在上文 <code>h = 0b 1101 1010 1011 1100 1011 1101 1010 1011</code> 的例子中，我们只取了 hash 的后 4 位 <code>0b 1011</code> 来计算 hash 落点，前 28 位没有参与计算。这显然是不合理的，因为这相当于我们只拿了 hash 的很小一部分来代表整个 hash 值对应的元素。少数人怎么能代表多数人呢？🤯</p>
+<p>那么 JDK 是怎么解决这个问题的呢？我们来看看先前跳过的 <code>hash()</code> 函数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Computes key.hashCode() and spreads (XORs) higher bits of hash</span></span><br><span class="line"><span class="comment"> * to lower.  Because the table uses power-of-two masking, sets of</span></span><br><span class="line"><span class="comment"> * hashes that vary only in bits above the current mask will</span></span><br><span class="line"><span class="comment"> * always collide. (Among known examples are sets of Float keys</span></span><br><span class="line"><span class="comment"> * holding consecutive whole numbers in small tables.)  So we</span></span><br><span class="line"><span class="comment"> * apply a transform that spreads the impact of higher bits</span></span><br><span class="line"><span class="comment"> * downward. There is a tradeoff between speed, utility, and</span></span><br><span class="line"><span class="comment"> * quality of bit-spreading. Because many common sets of hashes</span></span><br><span class="line"><span class="comment"> * are already reasonably distributed (so don&#x27;t benefit from</span></span><br><span class="line"><span class="comment"> * spreading), and because we use trees to handle large sets of</span></span><br><span class="line"><span class="comment"> * collisions in bins, we just XOR some shifted bits in the</span></span><br><span class="line"><span class="comment"> * cheapest possible way to reduce systematic lossage, as well as</span></span><br><span class="line"><span class="comment"> * to incorporate impact of the highest bits that would otherwise</span></span><br><span class="line"><span class="comment"> * never be used in index calculations because of table bounds.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object key)</span> &#123;</span><br><span class="line">    <span class="type">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="literal">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码就相对清晰了，<code>(h = key.hashCode()) ^ (h &gt;&gt;&gt; 16)</code> 所做的事情就是将 hash 的高 16 位和低 16 位进行 <strong>异或</strong> 运算，这样就能保证 hash 的高位和低位都参与到计算中，进而保证了 hash 映射的 <strong>离散分布</strong> 。</p>
+<p>再拿之前的例子来看：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">// 假设 key.hashCode() 是我们先前使用的 hash 值</span><br><span class="line">h = 0b 1101 1010 1011 1100 1011 1101 1010 1011</span><br><span class="line">^</span><br><span class="line">h &gt;&gt;&gt; 16 = 0b 0000 0000 0000 0000 1101 1010 1011 1100</span><br><span class="line">=</span><br><span class="line">0b 1101 1010 1011 1100 0110 0111 0001 0111</span><br></pre></td></tr></table></figure>
+
+<p>这么算完后，假设 <code>table</code> 的长度是 16，那么 <code>0b 0111</code> 才是真正参与计算的值，而不是之前的 <code>0b 1011</code>。这样就保证了 hash 映射的 <strong>离散分布</strong> 。</p>
+<p>你可能会问，为什么是 16 位？这主要是因为绝大多数的 HashMap table 长度是不会超过 $2^{16} &#x3D; 65536$ 的。因此这样的计算足够满足大多数场景下，尽可能公平地考虑高位（本来不参与 hash 的）和低位（本来就要参与 hash 的）对 hash 的影响。</p>
+<blockquote>
+<p>本文参考文章：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://javaguide.cn/java/collection/hashmap-source-code.html">HashMap 源码分析</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_31086797/article/details/106505321">hashmap 算法 h &amp; (length-1)详解</a></p>
+</li>
+</ul>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://alrisha.cn">FAWC</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://alrisha.cn/2024/07/a2b435f4.html">https://alrisha.cn/2024/07/a2b435f4.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://alrisha.cn" target="_blank">Alrisha</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a><a class="post-meta__tags" href="/tags/HashMap/">HashMap</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2024/02/26/MjBFKAicaJS1RrX.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/07/a9f8b857.html" title="当容量不是 2 的幂次方时，HashMap 是怎么处理的"><img class="cover" src="https://s2.loli.net/2024/02/26/MjBFKAicaJS1RrX.png" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">当容量不是 2 的幂次方时，HashMap 是怎么处理的</div></div></a></div><div class="next-post pull-right"><a href="/2024/06/12213648.html" title="简述 OAuth 2.0 鉴权架构"><img class="cover" src="https://s2.loli.net/2024/06/30/eIw8yrLZh1mdPAQ.png" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">简述 OAuth 2.0 鉴权架构</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/07/a9f8b857.html" title="当容量不是 2 的幂次方时，HashMap 是怎么处理的"><img class="cover" src="https://s2.loli.net/2024/02/26/MjBFKAicaJS1RrX.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2026-01-01</div><div class="title">当容量不是 2 的幂次方时，HashMap 是怎么处理的</div></div></a></div><div><a href="/2023/10/44259116.html" title="如何单独编译 Nacos 客户端源码并将其注入 Spring Cloud 中"><img class="cover" src="https://s2.loli.net/2023/05/08/ytsYGgT21pbqdCa.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2026-01-01</div><div class="title">如何单独编译 Nacos 客户端源码并将其注入 Spring Cloud 中</div></div></a></div><div><a href="/2024/03/d1e89f6a.html" title="服务器突然变得卡顿，怎么办？（1）综述"><img class="cover" src="https://s2.loli.net/2024/03/20/HK6peJdxu7tfIqL.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2026-01-01</div><div class="title">服务器突然变得卡顿，怎么办？（1）综述</div></div></a></div><div><a href="/2024/04/bd9408a6.html" title="服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿"><img class="cover" src="https://s2.loli.net/2024/03/20/HK6peJdxu7tfIqL.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2026-01-01</div><div class="title">服务器突然变得卡顿，怎么办？（2）Java GC 导致的卡顿</div></div></a></div><div><a href="/2024/02/81afead4.html" title="花式实现三个线程交替打印ABC"><img class="cover" src="https://s2.loli.net/2024/02/26/MjBFKAicaJS1RrX.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2026-01-01</div><div class="title">花式实现三个线程交替打印ABC</div></div></a></div><div><a href="/2024/01/a5771958.html" title="解决伪共享(False-Sharing)问题：最大化利用你的CPU缓存"><img class="cover" src="https://s2.loli.net/2024/01/24/9TnNwmXv82Z6saM.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2026-01-01</div><div class="title">解决伪共享(False-Sharing)问题：最大化利用你的CPU缓存</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2024/02/29/ZkKG1RDmgLTqaoE.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">FAWC</div><div class="author-info__description">计算机专业学习者兼游戏狂热爱好者</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">61</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FAWC438"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FAWC438" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:kevin_lgh@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">本网站的图床 CDN 在国内部分地区访问可能会有点慢，若加载时间过长请尝试刷新页面或更换访问节点🙏</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5%E6%BA%90%E7%A0%81%E7%9C%8B%E7%9C%8B-HashMap-%E7%9A%84-put-%E6%96%B9%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">深入源码看看 HashMap 的 put 方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF-2-%E7%9A%84%E5%B9%82%E6%AC%A1%E6%96%B9%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">为什么是 2 的幂次方？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%9D%E8%AF%81-hash-%E6%98%A0%E5%B0%84%E7%9A%84%E7%A6%BB%E6%95%A3%E5%88%86%E5%B8%83"><span class="toc-number">3.</span> <span class="toc-text">保证 hash 映射的离散分布</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/53031ead.html" title="我的 2025 年"><img src="https://s2.loli.net/2026/01/01/SxUwCqgp39aiKRA.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="我的 2025 年"/></a><div class="content"><a class="title" href="/2026/01/53031ead.html" title="我的 2025 年">我的 2025 年</a><time datetime="2025-12-31T22:05:44.000Z" title="发表于 2026-01-01 06:05:44">2026-01-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/845ab83e.html" title="学生时代的最后一天"><img src="https://s2.loli.net/2025/06/20/17uHemcjZhTLlFf.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="学生时代的最后一天"/></a><div class="content"><a class="title" href="/2025/06/845ab83e.html" title="学生时代的最后一天">学生时代的最后一天</a><time datetime="2025-06-20T15:00:11.000Z" title="发表于 2025-06-20 23:00:11">2025-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/fb3475cb.html" title="我的 2024 秋招&amp;春招面经"><img src="https://s2.loli.net/2022/12/13/hN7FB1dGt3kPxjv.webp" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="我的 2024 秋招&amp;春招面经"/></a><div class="content"><a class="title" href="/2025/06/fb3475cb.html" title="我的 2024 秋招&amp;春招面经">我的 2024 秋招&amp;春招面经</a><time datetime="2025-06-20T14:14:08.000Z" title="发表于 2025-06-20 22:14:08">2025-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/dfd12c29.html" title="在 Rust 中使用多个线程交替打印 ABC"><img src="https://s2.loli.net/2025/04/16/epPo5UTgHQMAb8O.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="在 Rust 中使用多个线程交替打印 ABC"/></a><div class="content"><a class="title" href="/2025/04/dfd12c29.html" title="在 Rust 中使用多个线程交替打印 ABC">在 Rust 中使用多个线程交替打印 ABC</a><time datetime="2025-04-16T07:42:51.000Z" title="发表于 2025-04-16 15:42:51">2025-04-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/6339ab96.html" title="引用计数 GC 算法：为什么都用上 Python 了还要手动关闭对象？"><img src="https://s2.loli.net/2024/03/21/jUW2m6iN94sTDKw.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="引用计数 GC 算法：为什么都用上 Python 了还要手动关闭对象？"/></a><div class="content"><a class="title" href="/2025/02/6339ab96.html" title="引用计数 GC 算法：为什么都用上 Python 了还要手动关闭对象？">引用计数 GC 算法：为什么都用上 Python 了还要手动关闭对象？</a><time datetime="2025-02-24T04:08:41.000Z" title="发表于 2025-02-24 12:08:41">2025-02-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://s2.loli.net/2024/02/26/MjBFKAicaJS1RrX.png')"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By FAWC</div><div class="footer_custom_text">感谢你看到最后！</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div>
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: true,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body></html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>RFC 9234 ：一种新的 BGP 路由泄露防御与检测方法 | Alrisha</title><meta name="author" content="FAWC,kevin_lgh@foxmail.com"><meta name="copyright" content="FAWC"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最近在 IETF 数据库上看近期的互联网草案和 RFC 文档。我特别关注到了 RFC 9234 - Route Leak Prevention and Detection Using Roles in UPDATE and OPEN Messages 这篇文档。该文档在今年（2022年）5月份才正式被赋予 RFC 编号，算是一篇很新的文档。这篇文档描述了通过对 BGP 的 Open 和 Updat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RFC 9234 ：一种新的 BGP 路由泄露防御与检测方法">
+<meta property="og:url" content="https://alrisha.cn/2022/10/73c1232.html">
+<meta property="og:site_name" content="Alrisha">
+<meta property="og:description" content="最近在 IETF 数据库上看近期的互联网草案和 RFC 文档。我特别关注到了 RFC 9234 - Route Leak Prevention and Detection Using Roles in UPDATE and OPEN Messages 这篇文档。该文档在今年（2022年）5月份才正式被赋予 RFC 编号，算是一篇很新的文档。这篇文档描述了通过对 BGP 的 Open 和 Updat">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/10/19/DJhzCtxmP7S1Oyl.jpg">
+<meta property="article:published_time" content="2022-10-19T05:21:55.000Z">
+<meta property="article:modified_time" content="2025-12-31T21:44:40.782Z">
+<meta property="article:author" content="FAWC">
+<meta property="article:tag" content="RFC Document">
+<meta property="article:tag" content="BGP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/10/19/DJhzCtxmP7S1Oyl.jpg"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/gaming.svg"><link rel="canonical" href="https://alrisha.cn/2022/10/73c1232.html"><link rel="preconnect" href="//cdnjs.cloudflare.com"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//www.clarity.ms"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="0XuTTRNwC5ys6TFutW1GLvmtffD7QVYk-6BAsY5RaOg"/><meta name="baidu-site-verification" content="code-Ktb2MMTpFe"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32241c273a93c8c23595f464d477ca45";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-RKQBB7LDQC"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-RKQBB7LDQC');
+</script><script>(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "dy67k2hgwc");</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdnjs.cloudflare.com/ajax/libs/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RFC 9234 ：一种新的 BGP 路由泄露防御与检测方法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-01-01 05:44:40'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...（若加载时间过长请尝试刷新页面或更换访问节点🙏）</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2024/02/29/ZkKG1RDmgLTqaoE.png" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">61</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2022/10/19/DJhzCtxmP7S1Oyl.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Alrisha"><span class="site-name">Alrisha</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">RFC 9234 ：一种新的 BGP 路由泄露防御与检测方法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-10-19T05:21:55.000Z" title="发表于 2022-10-19 13:21:55">2022-10-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T21:44:40.782Z" title="更新于 2026-01-01 05:44:40">2026-01-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%87%E7%8C%AE/">文献</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="RFC 9234 ：一种新的 BGP 路由泄露防御与检测方法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>最近在 IETF 数据库上看近期的互联网草案和 RFC 文档。我特别关注到了 <a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/rfc9234/">RFC 9234 - Route Leak Prevention and Detection Using Roles in UPDATE and OPEN Messages</a> 这篇文档。该文档在今年（2022年）5月份才正式被赋予 RFC 编号，算是一篇很新的文档。这篇文档描述了通过对 BGP 的 <code>Open</code> 和 <code>Update</code> 两种报文新字段属性的设计，实现域间路由泄露的检测与防御。对于 BGP 这个已经成熟了数年的协议来说，有一份新的 RFC 文档已经非常难能可贵了，更何况是对报文本身的修改。恰巧我的本科毕业设计和实验室里一位学姐的研究方向都是这方面的内容，同时也为了方便我的组会汇报，在这里记录一下我对这篇文档的粗略介绍。<del>其实基本上就是翻译……</del></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>路由泄露是指 BGP 前缀的传播违反了对 BGP 拓扑关系的预期。例如将从一个 provider 学到的路由宣布给另一个 provider ；或是将从一个 peer 学到的路由宣布给另一个 peer 或宣布给其直接的 provider。这往往是 BGP 路由配置错误或缺失，导致自治域系统（autonomous systems, AS）之间缺乏协调的结果。</p>
+<p>现有的路由泄露防御方案基本依赖于运营商的人工配置，无法检查本地 AS 和目标 AS 的配置是否一致，也不存在定义两个 eBGP （External BGP）宣告者之间商业关系的协议。</p>
+<p>RFC 9234 规定了一种带内的方法来预防和检测路由泄露以取代上述由网络管理员驱动的基于配置的泄露解决方法。这个方法增强了 BGP <code>Open</code> 报文的功能，使得 eBGP 会话能够达成一种商业关系协议，BGP 路由路径将会根据这个特点进行标记，从而能防止与检测路由泄露。</p>
+<p>该方法使用了一个新的属性参数 <code>BGP Role</code> ，该参数通过在 BGP <code>Open</code> 报文中的 <code>Capabilities</code> 字段（见<a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/rfc5492/">RFC 5492</a>）进行配置。</p>
+<blockquote>
+<p>RFC 5492 指出， <code>Capabilities</code> 字段是一个<strong>可选</strong>字段，它的一个重要特点之一是：当收到带有该字段 <code>Open</code> 报文的 BGP 路由器不支持 <code>Capabilities</code> 字段描述的功能时，将会把该功能忽略并正常建立 BGP 连接</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+------------------------------+</span><br><span class="line">| Capability Code (1 octet)    |</span><br><span class="line">+------------------------------+</span><br><span class="line">| Capability Length (1 octet)  |</span><br><span class="line">+------------------------------+</span><br><span class="line">| Capability Value (variable)  |</span><br><span class="line">~                              ~</span><br><span class="line">+------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>同时，该方法还定义了一个可选的、具有传递性的 BGP <code>Path Attribute</code> （在 <code>Update</code> 报文中的一个字段），名为 <code>Only to Customer (OTC)</code> 。该参数能防止 AS 创建泄露报文，并能检测出 AS Path 中的路由泄露。</p>
+<p>本文所述方法仅适用于 IPv4 和 IPv6 的单播路由通告。</p>
+<blockquote>
+<p><strong>必须知识</strong>：RFC 9234 假定读者已经理解 BGP 5种基本报文的数据结构</p>
+</blockquote>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><p>下文中，“ <em>本地AS</em> ”和“ <em>远端AS</em> ”用于指代 eBGP 会话的两端。 <em>本地AS</em> 指要执行所述协议操作的 AS ， <em>远端AS</em> 指 eBGP 会话另一端的 AS 。</p>
+<p>本文还定义了以下对等关系术语：</p>
+<table>
+<thead>
+<tr>
+<th align="center">角色</th>
+<th align="center">路由规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Provider</td>
+<td align="center"><strong>可能会</strong>向 Customer 传播任何可用路由</td>
+</tr>
+<tr>
+<td align="center">Customer</td>
+<td align="center"><strong>可能会</strong>将从自身的 Customer 那里学到的或是本地产生的路由传播到一个 Provider 。所有其它路线都<strong>无法</strong>传播</td>
+</tr>
+<tr>
+<td align="center">Route Server (RS)</td>
+<td align="center"><strong>可能会</strong>向 RS-Client 传播任何可用路由</td>
+</tr>
+<tr>
+<td align="center">Route Server Client (RS-Client)</td>
+<td align="center"><strong>可能会</strong>将从自身的 Customer 那里学到的或是本地产生的路由传播到一个 RS 。所有其它路线都<strong>无法</strong>传播</td>
+</tr>
+<tr>
+<td align="center">Peer</td>
+<td align="center"><strong>可能会</strong>将从自身的 Customer 那里学到的或是本地产生的路由传播到另一个 peer 。所有其它路线都<strong>无法</strong>传播</td>
+</tr>
+</tbody></table>
+<p>违反上述路由规则可能会导致路由泄露。</p>
+<p>特别的，如果本地 AS 和远端 AS 有一个以上的对等角色，就应当被视为<strong>复杂对等关系</strong>。比如一对 AS 之间部分前缀是 Provider2Customer 关系，另一部分前缀是 Peer2Peer 关系。</p>
+<!-- 下文将提到， OTC 属性用于识别 AS 从其 peer ， provider 或 RS 收到的路由。 -->
+
+<h2 id="BGP-Role"><a href="#BGP-Role" class="headerlink" title="BGP Role"></a>BGP Role</h2><p>BGP Role 描述了建立连接的 eBGP speaker 之间的关系，本地 AS 如果是下表描述的任何一个角色，都应当在 eBGP 报文中配置 BGP Role，除非 eBGP 连接之间是<strong>复杂对等关系</strong>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">本地 AS 角色</th>
+<th align="center">具体描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Provider</td>
+<td align="center">本地 AS 是远端 AS 的 Provider</td>
+</tr>
+<tr>
+<td align="center">Customer</td>
+<td align="center">本地 AS 是远端 AS 的 Customer</td>
+</tr>
+<tr>
+<td align="center">Route Server (RS)</td>
+<td align="center">本地 AS 是一个 RS ，远端 AS 是其 RS-Client</td>
+</tr>
+<tr>
+<td align="center">Route Server Client (RS-Client)</td>
+<td align="center">本地 AS 是一个 RS-Client ，远端 AS 是其 RS</td>
+</tr>
+<tr>
+<td align="center">Peer</td>
+<td align="center">本地 AS 和远端 AS 之间是 Peer</td>
+</tr>
+</tbody></table>
+<p>BGP Role 通过 <code>Update</code> 报文的 <code>Capabilities</code> 字段确认其内容。</p>
+<h3 id="BGP-Role-编码"><a href="#BGP-Role-编码" class="headerlink" title="BGP Role 编码"></a>BGP Role 编码</h3><p>BGP Role 在 Capabilities 字段的编码如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+-------------------------------------+</span><br><span class="line">|              Code: 9                |</span><br><span class="line">+-------------------------------------+</span><br><span class="line">|         Length: 1 (octet)           |</span><br><span class="line">+-------------------------------------+</span><br><span class="line">| Value: integer (speaker&#x27;s BGP Role) |</span><br><span class="line">~                                     ~</span><br><span class="line">+-------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>其中，BGP Role 与 Value 字段的对应关系如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">Value</th>
+<th align="center">（本地 AS） BGP Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">Provider</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">RS</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">RS-Client</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">Customer</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">Peer</td>
+</tr>
+<tr>
+<td align="center">5-255</td>
+<td align="center">Unassigned</td>
+</tr>
+</tbody></table>
+<p>BGP Role 属性一旦在本地被配置，其 eBGP speaker 必须在 BGP <code>Open</code> 报文中公布它。eBGP 路由器<strong>不能</strong>公布多种版本的 BGP Role 。下节将介绍收到多个 BGP Role 之后的错误处理。</p>
+<h3 id="BGP-Role-正确性判断"><a href="#BGP-Role-正确性判断" class="headerlink" title="BGP Role 正确性判断"></a>BGP Role 正确性判断</h3><p>仅仅收到 BGP Role 不能保证两个 eBGP 实例之间的角色关系是正确的。下表是能够正确匹配的 BGP 角色关系：</p>
+<table>
+<thead>
+<tr>
+<th align="center">本地 AS 角色</th>
+<th align="center">远端 AS 角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Provider</td>
+<td align="center">Customer</td>
+</tr>
+<tr>
+<td align="center">Customer</td>
+<td align="center">Provider</td>
+</tr>
+<tr>
+<td align="center">RS</td>
+<td align="center">RS-Client</td>
+</tr>
+<tr>
+<td align="center">RS-Client</td>
+<td align="center">RS</td>
+</tr>
+<tr>
+<td align="center">Peer</td>
+<td align="center">Peer</td>
+</tr>
+</tbody></table>
+<p>如果角色不匹配， BGP speaker 必须使用 Role Mismatch <strong>Notification</strong> (code 2, subcode 11) 拒绝连接。</p>
+<p>考虑到向后兼容，如果收到的报文缺失了 BGP Role ，BGP speaker 应当忽略这个属性并继续连接的建立。</p>
+<p>如果一个 BGP speaker 收到了多个相同的 BGP Role ， 其 value 字段值都相同，则该 speaker 应当认为它们都是同一个 BGP Role 属性，并继续正常工作；一旦这些 BGP Role 中存在互不相同的 value ，则 BGP speaker 必须使用 Role Mismatch <strong>Notification</strong> (code 2, subcode 11) 拒绝连接。</p>
+<blockquote>
+<p>和 Open 、 Update 一样， Notification 也是 BGP 报文的一种，code 2 代表 Open 消息错误，其后的 subcode 11 则是在该 RFC 中定义的，针对“角色不匹配”事件设定的。该错误码已被 IANA 收录。</p>
+</blockquote>
+<h2 id="Only-to-Customer-OTC-属性"><a href="#Only-to-Customer-OTC-属性" class="headerlink" title="Only to Customer (OTC) 属性"></a>Only to Customer (OTC) 属性</h2><p>OTC 属性是 BGP <code>Update</code> 报文中 Path Attribute 字段的一个<strong>可选</strong>的且<strong>可传递</strong>的属性。</p>
+<blockquote>
+<p>Path Attribute 字段大家可能第一眼比较陌生，但是要知道的是像 AS_PATH, NEXT_HOP, LOCAL_PREF 等著名属性都在这个字段里</p>
+</blockquote>
+<p>OTC 属性的目的在于，一旦一个路由被 a 发送给 b，且 b 是 a 的 Customer 、 RS-Client 或 Peer 。那么在 b 要转发该路由给 c 时，OTC 属性强制保证了 c 必须是 b 的 Customer。</p>
+<p>OTC 属性代码为35，长度为4个字节，属性值是一个 ASN ，该值由以下所述路由规则决定。</p>
+<h3 id="OTC-属性的处理"><a href="#OTC-属性的处理" class="headerlink" title="OTC 属性的处理"></a>OTC 属性的处理</h3><ul>
+<li><p>以下路由<strong>入口</strong>规则适用于路由器对 OTC 属性的处理</p>
+<ol>
+<li>如果从 Customer 或 RS-Client 处收到了带有 OTC 属性的路由，那么这就是一个路由泄露，该路由<strong>一定</strong>是不合格的</li>
+<li>如果从 Peer （即具有 Peer 角色的远端 AS）收到具有 OTC 属性的路由，且该属性的值不等于这个远端 AS 的 ASN，那么这就是一个路由泄露，该路由<strong>一定</strong>是不合格的</li>
+<li>如果从 Provider 、 Peer 或 RS 角色的远端 AS 收到路由，且 OTC 属性不存在，那么该路由必须被添加一个等于远端 AS 的 ASN 的值。</li>
+</ol>
+</li>
+<li><p>以下路由<strong>出口</strong>规则适用于路由器对 OTC 属性的处理</p>
+<ol>
+<li>如果一个路由公告要发送给 Customer 、 Peer 或 RS-Client （当发送者为 RS 时），且 OTC 属性不存在，那么当公告该路由时，<strong>必须</strong>添加一个 OTC 属性，其值等于本地 AS 的 ASN。</li>
+<li>如果一个路由已经包含了 OTC 属性，它<strong>一定</strong>不会被转发给 Provider 、 Peer 或 RS 。</li>
+</ol>
+</li>
+</ul>
+<h3 id="OTC-属性的应用"><a href="#OTC-属性的应用" class="headerlink" title="OTC 属性的应用"></a>OTC 属性的应用</h3><ul>
+<li><p>以上路由规则能为本地 AS 提供泄露预防。在本地 AS 部署以上规则的前提下， OTC 属性的存在能向出口路由器表明该路由是从 Provider 、 Peer 或 RS 学习来的，它只能被发送到 Customer 。</p>
+</li>
+<li><p>如果收到了来自 Customer 、 Peer 或 RS-Client 的路由，在本地设置的 OTC 属性也提供了一种方法来在多跳以外检测 AS 的路由泄露。例如，如果一个 AS 在发送给 peer 的路由上设置了 OTC 属性，且该路由随后被一个路径上的 AS 从其 customer 那里收到，那么接受路由的 AS 会由于 OTC 的存在检测到该路由是一个路由泄露。</p>
+</li>
+</ul>
+<blockquote>
+<p>多跳外检测路由泄露是由 OTC 属性的传递性决定的</p>
+</blockquote>
+<ul>
+<li>OTC 属性可以在远端 AS 的出口设置，也可以在本地 AS 的入口设置。也就是说，如果远端 AS 不支持 OTC 属性，但本地 AS 支持，那么本地 AS 根据规则也一定会将来自远端 AS 路由设置 OTC 属性，OTC 属性总是能设置为符合预期的值。这样的特性加之 OTC 属性多跳外检测路由泄露的能力，使得该路由泄露防御与检测方法可行性更高，满足在网络中部分部署的条件。</li>
+</ul>
+<h3 id="OTC-属性使用建议"><a href="#OTC-属性使用建议" class="headerlink" title="OTC 属性使用建议"></a>OTC 属性使用建议</h3><ul>
+<li><p>如果报文中 OTC 属性长度值不是4，那么认为 OTC 属性是 <em>畸形</em> 的。根据 <a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/rfc7606/">RFC 7606</a> ，带有 <em>畸形</em> 属性的 <code>Update</code> 报文应使用“视同撤回”的方法处理。</p>
+</li>
+<li><p>上文提到的<a href="#otc-%E5%B1%9E%E6%80%A7%E7%9A%84%E5%A4%84%E7%90%86">OTC 属性的处理</a><strong>不建议</strong>在 <a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/rfc5065/">RFC 5065</a> 定义的 AS 联盟（Autonomous System Confederations）的自治系统之间使用。如果 OTC 被添加到 AS 联盟出口，其值<strong>必须</strong>等于 AS 联盟标识符，不能与 AS 联盟任何一个成员的 ASN 对应。</p>
+</li>
+<li><p>对于面向互联网的 ASN 及其背后绑定的私有 ASN，可以使用本文制定的规则。但任何内部细节都不在本文讨论范围内，在面向互联网的 AS 出口处， OTC 属性<strong>不得</strong>包含面向互联网的 ASN 以外的值。</p>
+</li>
+<li><p>一旦 OTC 属性被设置，<strong>必须</strong>保持不变。</p>
+</li>
+<li><p>所有入站和出站规则仅适用 IPv4 与 IPv6 地址族，默认情况下<strong>不得</strong>用于其它地址族。</p>
+</li>
+<li><p>网络操作员&#x2F;管理员<strong>不得</strong>修改本节中制定的规则。</p>
+</li>
+</ul>
+<h2 id="额外考量"><a href="#额外考量" class="headerlink" title="额外考量"></a>额外考量</h2><ul>
+<li><p><strong>不得</strong>在具有<a href="#%E6%9C%AF%E8%AF%AD">复杂对等关系</a>的 eBGP 连接上配置 BGP Role，除非能将 eBGP 的复杂对等关系连接拆分为正常对等关系连接。</p>
+</li>
+<li><p>运营商可能希望精确到以每个前缀为基准配置该方法，但目前还没有带内的方案来检测对每个前缀进行配置的正确性。<del>这句话原文我也看不懂啊！</del></p>
+</li>
+<li><p>BGP Role 或 OTC 属性的错误设置可能会导致路由错误传播。另外，本文没有规定对 OTC 属性中不正确 ASN 的特殊处理</p>
+</li>
+<li><p>在 <a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/rfc7705/">RFC7705</a> 定义的路由迁移的情况下，一个路由器可能能够将自己表示为几个不同 ASN 中的任意一个。不过，根据上文定义的<a href="#otc-%E5%B1%9E%E6%80%A7%E7%9A%84%E5%A4%84%E7%90%86">出口规则</a>，只要路由器将 OTC 值设置为其当前代表的 ASN 就不会出现问题。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/rfc7606/">RFC 7606</a> 的第六节提到了“视同撤回”策略可能产生的负面影响，这也同样适用于本方案的 OTC 属性。</p>
+</li>
+</ul>
+<h2 id="关于该路由泄露防御与检测方法的安全考虑"><a href="#关于该路由泄露防御与检测方法的安全考虑" class="headerlink" title="关于该路由泄露防御与检测方法的安全考虑"></a>关于该路由泄露防御与检测方法的安全考虑</h2><ul>
+<li>BGP Role 的错误配置可能会影响路由的传播。例如，如果下游（即面向 Customer ）的对等链路被错误配置为 Provider 或 Peer 角色，向这个方向传播的路由会被限制；如果一个上游 Provider 被错误配置为 Customer ，可能会导致其传播从其它 Provider 或 Peer 收到的路由。但 BGP 商业关系一般由人为制定与配置，使得这种错误配置发生的机率不大。</li>
+<li>非常不建议将 BGP Role 严格协商机制作为默认配置，这可能会导致 eBGP 会话无法启动的情况。</li>
+<li>删除或改变 OTC 属性值可能会成为一种新的主动路由泄露攻击的方式</li>
+<li>不鼓励无条件在从 Customer 到 Provider 的链路上部署 OTC 属性，因为这会限制路由的传播。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://alrisha.cn">FAWC</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://alrisha.cn/2022/10/73c1232.html">https://alrisha.cn/2022/10/73c1232.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://alrisha.cn" target="_blank">Alrisha</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RFC-Document/">RFC Document</a><a class="post-meta__tags" href="/tags/BGP/">BGP</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2022/10/19/DJhzCtxmP7S1Oyl.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/10/52023eef.html" title="WSL2 启动报错：参考的对象类型不支持尝试的操作"><img class="cover" src="https://s2.loli.net/2022/10/25/eUTOmV8DBXKQoWF.jpg" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">WSL2 启动报错：参考的对象类型不支持尝试的操作</div></div></a></div><div class="next-post pull-right"><a href="/2022/10/4182d7dd.html" title="通过 Golang 的函数类型实现接口"><img class="cover" src="https://s2.loli.net/2024/03/21/9mjBvNEfscDTGIh.jpg" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">通过 Golang 的函数类型实现接口</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/10/3959450b.html" title="Windows 下通过 docker + frrouting 构建bgp路由拓扑"><img class="cover" src="https://s2.loli.net/2024/03/21/AtwQFvo9RTePYq4.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2026-01-01</div><div class="title">Windows 下通过 docker + frrouting 构建bgp路由拓扑</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2024/02/29/ZkKG1RDmgLTqaoE.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">FAWC</div><div class="author-info__description">计算机专业学习者兼游戏狂热爱好者</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">61</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FAWC438"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FAWC438" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:kevin_lgh@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">本网站的图床 CDN 在国内部分地区访问可能会有点慢，若加载时间过长请尝试刷新页面或更换访问节点🙏</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AF%E8%AF%AD"><span class="toc-number">2.</span> <span class="toc-text">术语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BGP-Role"><span class="toc-number">3.</span> <span class="toc-text">BGP Role</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BGP-Role-%E7%BC%96%E7%A0%81"><span class="toc-number">3.1.</span> <span class="toc-text">BGP Role 编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BGP-Role-%E6%AD%A3%E7%A1%AE%E6%80%A7%E5%88%A4%E6%96%AD"><span class="toc-number">3.2.</span> <span class="toc-text">BGP Role 正确性判断</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Only-to-Customer-OTC-%E5%B1%9E%E6%80%A7"><span class="toc-number">4.</span> <span class="toc-text">Only to Customer (OTC) 属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OTC-%E5%B1%9E%E6%80%A7%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">4.1.</span> <span class="toc-text">OTC 属性的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OTC-%E5%B1%9E%E6%80%A7%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">4.2.</span> <span class="toc-text">OTC 属性的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OTC-%E5%B1%9E%E6%80%A7%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="toc-number">4.3.</span> <span class="toc-text">OTC 属性使用建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%9D%E5%A4%96%E8%80%83%E9%87%8F"><span class="toc-number">5.</span> <span class="toc-text">额外考量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E8%AF%A5%E8%B7%AF%E7%94%B1%E6%B3%84%E9%9C%B2%E9%98%B2%E5%BE%A1%E4%B8%8E%E6%A3%80%E6%B5%8B%E6%96%B9%E6%B3%95%E7%9A%84%E5%AE%89%E5%85%A8%E8%80%83%E8%99%91"><span class="toc-number">6.</span> <span class="toc-text">关于该路由泄露防御与检测方法的安全考虑</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/53031ead.html" title="我的 2025 年"><img src="https://s2.loli.net/2026/01/01/SxUwCqgp39aiKRA.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="我的 2025 年"/></a><div class="content"><a class="title" href="/2026/01/53031ead.html" title="我的 2025 年">我的 2025 年</a><time datetime="2025-12-31T22:05:44.000Z" title="发表于 2026-01-01 06:05:44">2026-01-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/845ab83e.html" title="学生时代的最后一天"><img src="https://s2.loli.net/2025/06/20/17uHemcjZhTLlFf.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="学生时代的最后一天"/></a><div class="content"><a class="title" href="/2025/06/845ab83e.html" title="学生时代的最后一天">学生时代的最后一天</a><time datetime="2025-06-20T15:00:11.000Z" title="发表于 2025-06-20 23:00:11">2025-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/fb3475cb.html" title="我的 2024 秋招&amp;春招面经"><img src="https://s2.loli.net/2022/12/13/hN7FB1dGt3kPxjv.webp" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="我的 2024 秋招&amp;春招面经"/></a><div class="content"><a class="title" href="/2025/06/fb3475cb.html" title="我的 2024 秋招&amp;春招面经">我的 2024 秋招&amp;春招面经</a><time datetime="2025-06-20T14:14:08.000Z" title="发表于 2025-06-20 22:14:08">2025-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/dfd12c29.html" title="在 Rust 中使用多个线程交替打印 ABC"><img src="https://s2.loli.net/2025/04/16/epPo5UTgHQMAb8O.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="在 Rust 中使用多个线程交替打印 ABC"/></a><div class="content"><a class="title" href="/2025/04/dfd12c29.html" title="在 Rust 中使用多个线程交替打印 ABC">在 Rust 中使用多个线程交替打印 ABC</a><time datetime="2025-04-16T07:42:51.000Z" title="发表于 2025-04-16 15:42:51">2025-04-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/6339ab96.html" title="引用计数 GC 算法：为什么都用上 Python 了还要手动关闭对象？"><img src="https://s2.loli.net/2024/03/21/jUW2m6iN94sTDKw.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/FAWC438/FAWC438.github.io@main/img/404.jpg'" alt="引用计数 GC 算法：为什么都用上 Python 了还要手动关闭对象？"/></a><div class="content"><a class="title" href="/2025/02/6339ab96.html" title="引用计数 GC 算法：为什么都用上 Python 了还要手动关闭对象？">引用计数 GC 算法：为什么都用上 Python 了还要手动关闭对象？</a><time datetime="2025-02-24T04:08:41.000Z" title="发表于 2025-02-24 12:08:41">2025-02-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://s2.loli.net/2022/10/19/DJhzCtxmP7S1Oyl.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By FAWC</div><div class="footer_custom_text">感谢你看到最后！</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div>
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: true,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body></html>
